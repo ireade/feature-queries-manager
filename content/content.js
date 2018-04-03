@@ -80,24 +80,29 @@ function getConditionRules(condition) {
 
 console.log("Hello");
 
-const BROWSER = chrome || browser;
+browser.runtime.onMessage.addListener((msg) => {
 
-BROWSER.runtime.onMessage.addListener((msg, sender, callback) => {
   console.log(msg);
+  
   switch(msg.action) {
     case "start":
       FEATURE_QUERY_DECLARATIONS = [];
       FEATURE_QUERY_CONDITIONS = [];
       readStylesheets();
       getConditionsFromStylesheets();
-      console.log(FEATURE_QUERY_DECLARATIONS);
-      callback({ FEATURE_QUERY_CONDITIONS: FEATURE_QUERY_CONDITIONS, FEATURE_QUERY_DECLARATIONS: FEATURE_QUERY_DECLARATIONS });
+      return Promise.resolve({ 
+        FEATURE_QUERY_CONDITIONS: FEATURE_QUERY_CONDITIONS, 
+        FEATURE_QUERY_DECLARATIONS: FEATURE_QUERY_DECLARATIONS 
+      });
       break;
     case "toggleCondition":
       toggleCondition(msg.condition, msg.toggleOn);
-      callback();
+      return Promise.resolve();
+      break;
     case "getConditionRules":
       const conditionRules = getConditionRules(msg.condition);
-      callback(conditionRules);
+      return Promise.resolve(conditionRules);
+      break;
   }
+
 });
