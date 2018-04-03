@@ -170,6 +170,12 @@ aside li.selected button {
   color: #FFF;
 }
 
+.notice {
+  display: inline-block;
+  padding: 10px 20px;
+  font-style: italic;
+}
+
 /* **********************************
  *
  * Content

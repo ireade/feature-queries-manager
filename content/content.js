@@ -14,7 +14,7 @@ function readStylesheets() {
     try {
       cssRules = Array.from(stylesheet.cssRules);
     } catch(err) {
-      return console.warn("[FQM] Can't read cssRules from this stylesheet: " + stylesheet.href);
+      return console.warn(`[FQM] Can't read cssRules from stylesheet: ${stylesheet.href}`);
     }
 
     cssRules.forEach((rule, i) => {
@@ -42,7 +42,6 @@ function getConditionsFromStylesheets() {
 ************************************************************************ */
 
 function toggleCondition(condition, toggleOn) {
-  console.log(condition, toggleOn);
   FEATURE_QUERY_DECLARATIONS.forEach((declaration) => {
     if (declaration.rule.conditionText === condition) {
       if (toggleOn) {
@@ -66,7 +65,7 @@ function getConditionRules(condition) {
       conditionRules.push({
         cssText: declaration.rule.cssText,
         index: declaration.index,
-        stylesheet: declaration.stylesheet.href || "&lt;style&gt;"
+        stylesheet: declaration.stylesheet.href || '&lt;style&gt;'
       });
     }
   });
@@ -78,14 +77,9 @@ function getConditionRules(condition) {
     onMessage 
 ************************************************************************ */
 
-console.log("Hello");
-
 browser.runtime.onMessage.addListener((msg) => {
-
-  console.log(msg);
-  
   switch(msg.action) {
-    case "start":
+    case 'start':
       FEATURE_QUERY_DECLARATIONS = [];
       FEATURE_QUERY_CONDITIONS = [];
       readStylesheets();
@@ -95,14 +89,13 @@ browser.runtime.onMessage.addListener((msg) => {
         FEATURE_QUERY_DECLARATIONS: FEATURE_QUERY_DECLARATIONS 
       });
       break;
-    case "toggleCondition":
+    case 'toggleCondition':
       toggleCondition(msg.condition, msg.toggleOn);
       return Promise.resolve();
       break;
-    case "getConditionRules":
+    case 'getConditionRules':
       const conditionRules = getConditionRules(msg.condition);
       return Promise.resolve(conditionRules);
       break;
   }
-
 });
