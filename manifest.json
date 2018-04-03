@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+
+  "name": "Feature Queries Manager",
+  "short_name": "FQM",
+  "description": "Manage and toggle CSS on a page behind a @supports Feature Query.",
+  "version": "0.1",
+
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "<all_urls>"
+  ],
+
+  "devtools_page": "devtools.html",
+
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["content.js"]
+  }],
+
+  "icons": {
+    "128": "images/icon@128.png",
+    "64": "images/icon@64.png",
+    "16": "images/icon@16.png",
+    "48": "images/icon@48.png"
+  }
+}
