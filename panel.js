@@ -1,94 +1,87 @@
 
-function displayFeatureQueries(fq, featureQueryRules) {
+let FEATURE_QUERY_DECLARATIONS = [];
+let FEATURE_QUERY_CONDITIONS = [];
+const conditionsListEl = document.getElementById("feature-queries");
 
-  // console.log()
+function displayFeatureQueryConditionsList() {
+  let content = "";
 
-  if (!fq || fq.length == 0) {
-    return;
-  }
-  
-  var el = document.getElementById("feature-queries");
-
-  var items = "";
-
-  fq.forEach((item, i) => {
-
+  FEATURE_QUERY_CONDITIONS.forEach((condition, i) => {
     const template = `<li data-index="${i}">
       <span class="toggle">
-        <input type="checkbox" checked data-index="${i}">
+        <input type="checkbox" checked aria-label="Toggle Feature Query ${condition}">
       </span>
-      <button class="details">${item}</button>
+      <button class="details">${condition}</button>
     </li>`;
-
-    items += template;
-
+    content += template;
   });
 
-  el.innerHTML = items;
+  conditionsListEl.innerHTML = content;
+}
 
+function displayConditionRules(conditionRules, event) {
+  let content = "";
 
-  // Add event listeners
+  conditionRules.forEach((cr) => {
+    const code = document.createElement("code");
+    code.innerHTML = cr.cssText;
+    code.classList.add("css");
 
-  el.addEventListener("click", function(event) {
+    const template = `<section class="group">
+    <h3>${cr.stylesheet}</h3>
+    <pre>${code.outerHTML}</pre>
+    </section>`;
+    content += template;
+  });
 
-    if (event.target.dataset && event.target.dataset.index) {
+  document.querySelector("main").innerHTML = content;
 
-      const data = {
-        action: "toggleCondition",
-        condition: fq[event.target.dataset.index],
-        toggleOn: event.target.checked
-      }
-      
-      chrome.tabs.sendMessage(chrome.devtools.inspectedWindow.tabId, data, (response) => {});
-    }
+  hljs.initHighlightingOnLoad();
 
-    else if (event.target.tagName == "BUTTON") {
+  const currentlySelected = document.querySelector(".selected");
+  if (currentlySelected) currentlySelected.classList.remove("selected");
+  event.target.parentElement.classList.add("selected");
+}
 
-      const data = {
-        action: "getConditionRules",
-        condition: fq[event.target.parentElement.dataset.index]
-      };
+function onClickConditionsList(event) {
 
-      chrome.tabs.sendMessage(chrome.devtools.inspectedWindow.tabId, data, (conditionRules) => {
-        console.log(conditionRules);
+  // If clicked the checkbox
+  if (event.target.tagName == "INPUT") {
+    chrome.tabs.sendMessage(chrome.devtools.inspectedWindow.tabId, {
+      action: "toggleCondition",
+      condition: FEATURE_QUERY_CONDITIONS[event.target.parentElement.parentElement.dataset.index],
+      toggleOn: event.target.checked
+    }, (response) => {});
+  }
 
-        var result = "";
-
-        conditionRules.forEach((cr) => {
-          var template = `<section class="group">
-          <h3>${cr.stylesheet}</h3>
-          <pre>${cr.cssText}</pre>
-          </section>`;
-          result += template;
-        });
-
-        document.querySelector("main").innerHTML = result;
-
-        const currentlySelected = document.querySelector(".selected");
-        if (currentlySelected) currentlySelected.classList.remove("selected");
-        event.target.parentElement.classList.add("selected");
-
-      }); // end sendMessage
-
-
-
-
-    }
-
-  }); // end eventListener
-
-
-  // Highlight first one
-  const firstButton = document.querySelector('li[data-index="0"] button');
-  firstButton.click();
+  // If clicked the button
+  else if (event.target.tagName == "BUTTON") {
+    chrome.tabs.sendMessage(chrome.devtools.inspectedWindow.tabId, {
+      action: "getConditionRules",
+      condition: FEATURE_QUERY_CONDITIONS[event.target.parentElement.dataset.index]
+    }, (response) => displayConditionRules(response, event));
+  }
 
 }
 
+document.getElementById("reload").addEventListener("click", start);
 
+/* ************************************************************************
+    start 
+************************************************************************ */
 
 function start() {
-  chrome.tabs.sendMessage(chrome.devtools.inspectedWindow.tabId, { action: "start" }, (msg) => {
-    displayFeatureQueries(msg.conditions, msg.featureQueryRules);
+  chrome.tabs.sendMessage(chrome.devtools.inspectedWindow.tabId, { action: "start" }, (res) => {
+    FEATURE_QUERY_DECLARATIONS = res.FEATURE_QUERY_DECLARATIONS;
+    FEATURE_QUERY_CONDITIONS = res.FEATURE_QUERY_CONDITIONS;
+    
+    if (FEATURE_QUERY_CONDITIONS.length > 0) {
+      displayFeatureQueryConditionsList();
+      conditionsListEl.addEventListener("click", onClickConditionsList);
+      document.querySelector('li[data-index="0"] button').click();
+    } else {
+      conditionsListEl.innerHTML = "No Feature Queries found on this page."
+    }
   });
 }
 

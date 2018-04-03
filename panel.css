@@ -88,13 +88,33 @@ header {
   border-bottom: 1px solid var(--colour-border);
 }
 
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 header h1 {
   display: flex;
   align-items: center;
 }
 
+header img {
+  height: 1.5rem;
+}
+
 header h1 img {
   margin-right: 10px;
+}
+
+header button {
+  background: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
 }
 
 /* **********************************
@@ -150,12 +170,6 @@ aside li.selected button {
   color: #FFF;
 }
 
-#feature-queries:empty::after {
-  padding: 10px 20px;
-  display: inline-block;
-  content: "No feature Queries Found on this Page";
-}
-
 /* **********************************
  *
  * Content
@@ -178,11 +192,11 @@ main {
 }
 
 .group pre {
-  padding: 15px 10px;
+  padding: 15px;
   width: 100%;
   line-height: 1.6;
 }
 
 .group pre code {
-  font-size: 1.4rem;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }

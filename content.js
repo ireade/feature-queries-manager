@@ -1,66 +1,76 @@
-var featureQueryRules = [];
-var conditions = [];
 
-function parseStylesheets() {
+let FEATURE_QUERY_DECLARATIONS = [];
+let FEATURE_QUERY_CONDITIONS = [];
 
-  const stylesheets = Array.from(document.styleSheets);
+/* ************************************************************************
+    start
+************************************************************************ */
 
-  stylesheets.forEach((stylesheet) => {
+function readStylesheets() {
+  Array.from(document.styleSheets).forEach((stylesheet) => {
 
-    let rules;
+    let cssRules;
 
     try {
-      rules = Array.from(stylesheet.cssRules);
+      cssRules = Array.from(stylesheet.cssRules);
     } catch(err) {
-      console.log("Can't read cssRules from this stylesheet: " + stylesheet.href);
-      return;
+      return console.warn("[FQM] Can't read cssRules from this stylesheet: " + stylesheet.href);
     }
 
-    rules.forEach((rule, i) => {
-      if (rule instanceof CSSSupportsRule) {
-        featureQueryRules.push({
-          stylesheet: stylesheet,
-          index: i,
-          rule: rule
-        });
-      }
-    }); // rules.forEach()
+    cssRules.forEach((rule, i) => {
+      if (rule instanceof CSSSupportsRule) FEATURE_QUERY_DECLARATIONS.push({ 
+        index: i, 
+        stylesheet: stylesheet,
+        rule: rule });
+    });
 
-  }); // stylesheets.forEach()
+    console.log(FEATURE_QUERY_DECLARATIONS);
 
-  featureQueryRules.forEach((rule) => {
-    if (!conditions.includes(rule.rule.conditionText)) {
-      conditions.push(rule.rule.conditionText);
+  });
+}
+
+function getConditionsFromStylesheets() {
+  if (FEATURE_QUERY_DECLARATIONS.length === 0) return;
+
+  FEATURE_QUERY_DECLARATIONS.forEach((declaration) => {
+    if (!FEATURE_QUERY_CONDITIONS.includes(declaration.rule.conditionText)) {
+      FEATURE_QUERY_CONDITIONS.push(declaration.rule.conditionText);
     }
   });
-
-  // console.log(featureQueryRules);
-  // console.log(conditions);
-
 }
+
+/* ************************************************************************
+    toggleCondition
+************************************************************************ */
 
 function toggleCondition(condition, toggleOn) {
-  featureQueryRules.forEach((rule) => {
-    if (rule.rule.conditionText === condition) {
+  console.log(condition, toggleOn);
+  FEATURE_QUERY_DECLARATIONS.forEach((declaration) => {
+    if (declaration.rule.conditionText === condition) {
       if (toggleOn) {
-        rule.stylesheet.insertRule(rule.rule.cssText, rule.index);
+        declaration.stylesheet.insertRule(declaration.rule.cssText, declaration.index);
       } else {
-        rule.stylesheet.deleteRule(rule.index);
+        declaration.stylesheet.deleteRule(declaration.index);
       }
-    }
+    }    
   });
 }
+
+/* ************************************************************************
+    getConditionRules
+************************************************************************ */
 
 function getConditionRules(condition) {
   const conditionRules = [];
 
-  featureQueryRules.forEach((rule) => {
-    if (rule.rule.conditionText === condition) {
-      conditionRules.push({
-        cssText: rule.rule.cssText,
-        stylesheet: rule.stylesheet.href || "&lt;style&gt;"
-      });
-    }
+  FEATURE_QUERY_DECLARATIONS.forEach((declaration) => {
+    if (declaration.rule.conditionText !== condition) return;
+
+    conditionRules.push({
+      cssText: declaration.rule.cssText,
+      index: declaration.index,
+      stylesheet: declaration.stylesheet.href || "&lt;style&gt;"
+    });
   });
 
   return conditionRules;
@@ -74,8 +84,11 @@ chrome.runtime.onMessage.addListener(function(msg, sender, cb) {
 
   switch(msg.action) {
     case "start":
-      parseStylesheets();
-      cb({ conditions: conditions, featureQueryRules: featureQueryRules });
+      FEATURE_QUERY_DECLARATIONS = [];
+      FEATURE_QUERY_CONDITIONS = [];
+      readStylesheets();
+      getConditionsFromStylesheets();
+      cb({ FEATURE_QUERY_CONDITIONS: FEATURE_QUERY_CONDITIONS, FEATURE_QUERY_DECLARATIONS: FEATURE_QUERY_DECLARATIONS });
       break;
     case "toggleCondition":
       toggleCondition(msg.condition, msg.toggleOn);
