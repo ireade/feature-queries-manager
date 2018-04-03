@@ -82,7 +82,8 @@ console.log("Hello");
 
 const BROWSER = chrome || browser;
 
-BROWSER.runtime.onMessage.addListener(function(msg, sender, cb) {
+BROWSER.runtime.onMessage.addListener((msg, sender, callback) => {
+  console.log(msg);
   switch(msg.action) {
     case "start":
       FEATURE_QUERY_DECLARATIONS = [];
@@ -90,14 +91,13 @@ BROWSER.runtime.onMessage.addListener(function(msg, sender, cb) {
       readStylesheets();
       getConditionsFromStylesheets();
       console.log(FEATURE_QUERY_DECLARATIONS);
-      cb({ FEATURE_QUERY_CONDITIONS: FEATURE_QUERY_CONDITIONS, FEATURE_QUERY_DECLARATIONS: FEATURE_QUERY_DECLARATIONS });
+      callback({ FEATURE_QUERY_CONDITIONS: FEATURE_QUERY_CONDITIONS, FEATURE_QUERY_DECLARATIONS: FEATURE_QUERY_DECLARATIONS });
       break;
     case "toggleCondition":
       toggleCondition(msg.condition, msg.toggleOn);
-      cb();
+      callback();
     case "getConditionRules":
       const conditionRules = getConditionRules(msg.condition);
-      cb(conditionRules);
+      callback(conditionRules);
   }
-
 });
