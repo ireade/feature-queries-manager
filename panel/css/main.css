@@ -189,6 +189,9 @@ main {
 
 .group h3 {
   background-color: var(--colour-sidebar);
+  width: 100%;
+  font-size: 1.2rem;
+  padding: 2px 3px;
 }
 
 .group pre {
@@ -198,5 +201,6 @@ main {
 }
 
 .group pre code {
+  font-size: 1rem;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }

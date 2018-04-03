@@ -64,13 +64,13 @@ function getConditionRules(condition) {
   const conditionRules = [];
 
   FEATURE_QUERY_DECLARATIONS.forEach((declaration) => {
-    if (declaration.rule.conditionText !== condition) return;
-
-    conditionRules.push({
-      cssText: declaration.rule.cssText,
-      index: declaration.index,
-      stylesheet: declaration.stylesheet.href || "&lt;style&gt;"
-    });
+    if (declaration.rule.conditionText === condition) {
+      conditionRules.push({
+        cssText: declaration.rule.cssText,
+        index: declaration.index,
+        stylesheet: declaration.stylesheet.href || "&lt;style&gt;"
+      });
+    }
   });
 
   return conditionRules;
@@ -81,7 +81,6 @@ function getConditionRules(condition) {
 ************************************************************************ */
 
 chrome.runtime.onMessage.addListener(function(msg, sender, cb) {
-
   switch(msg.action) {
     case "start":
       FEATURE_QUERY_DECLARATIONS = [];
@@ -94,7 +93,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, cb) {
       toggleCondition(msg.condition, msg.toggleOn);
       cb();
     case "getConditionRules":
-      var conditionRules = getConditionRules(msg.condition);
+      const conditionRules = getConditionRules(msg.condition);
       cb(conditionRules);
   }
 

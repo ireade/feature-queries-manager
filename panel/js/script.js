@@ -23,21 +23,19 @@ function displayConditionRules(conditionRules, event) {
   let content = "";
 
   conditionRules.forEach((cr) => {
-    const code = document.createElement("code");
-    code.innerHTML = cr.cssText;
-    code.classList.add("css");
-
     const template = `<section class="group">
-    <h3>${cr.stylesheet}</h3>
-    <pre>${code.outerHTML}</pre>
+    <h3>${cr.stylesheet} at index:${cr.index}</h3>
+    <pre><code class="css">${cr.cssText}</code></pre>
     </section>`;
     content += template;
   });
 
   document.querySelector("main").innerHTML = content;
 
-  hljs.initHighlightingOnLoad();
+  // Syntax highlighting
+  Array.from(document.querySelectorAll("code.css")).forEach((block) => hljs.highlightBlock(block));
 
+  // Select item in aside
   const currentlySelected = document.querySelector(".selected");
   if (currentlySelected) currentlySelected.classList.remove("selected");
   event.target.parentElement.classList.add("selected");
