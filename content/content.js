@@ -24,8 +24,6 @@ function readStylesheets() {
         rule: rule });
     });
 
-    console.log(FEATURE_QUERY_DECLARATIONS);
-
   });
 }
 
@@ -80,13 +78,18 @@ function getConditionRules(condition) {
     onMessage 
 ************************************************************************ */
 
-chrome.runtime.onMessage.addListener(function(msg, sender, cb) {
+console.log("Hello");
+
+const BROWSER = chrome || browser;
+
+BROWSER.runtime.onMessage.addListener(function(msg, sender, cb) {
   switch(msg.action) {
     case "start":
       FEATURE_QUERY_DECLARATIONS = [];
       FEATURE_QUERY_CONDITIONS = [];
       readStylesheets();
       getConditionsFromStylesheets();
+      console.log(FEATURE_QUERY_DECLARATIONS);
       cb({ FEATURE_QUERY_CONDITIONS: FEATURE_QUERY_CONDITIONS, FEATURE_QUERY_DECLARATIONS: FEATURE_QUERY_DECLARATIONS });
       break;
     case "toggleCondition":

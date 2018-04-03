@@ -1,4 +1,5 @@
 
+const BROWSER = chrome || browser;
 let FEATURE_QUERY_DECLARATIONS = [];
 let FEATURE_QUERY_CONDITIONS = [];
 const conditionsListEl = document.getElementById("feature-queries");
@@ -45,7 +46,7 @@ function onClickConditionsList(event) {
 
   // If clicked the checkbox
   if (event.target.tagName == "INPUT") {
-    chrome.tabs.sendMessage(chrome.devtools.inspectedWindow.tabId, {
+    BROWSER.tabs.sendMessage(BROWSER.devtools.inspectedWindow.tabId, {
       action: "toggleCondition",
       condition: FEATURE_QUERY_CONDITIONS[event.target.parentElement.parentElement.dataset.index],
       toggleOn: event.target.checked
@@ -54,7 +55,7 @@ function onClickConditionsList(event) {
 
   // If clicked the button
   else if (event.target.tagName == "BUTTON") {
-    chrome.tabs.sendMessage(chrome.devtools.inspectedWindow.tabId, {
+    BROWSER.tabs.sendMessage(BROWSER.devtools.inspectedWindow.tabId, {
       action: "getConditionRules",
       condition: FEATURE_QUERY_CONDITIONS[event.target.parentElement.dataset.index]
     }, (response) => displayConditionRules(response, event));
@@ -69,7 +70,7 @@ document.getElementById("reload").addEventListener("click", start);
 ************************************************************************ */
 
 function start() {
-  chrome.tabs.sendMessage(chrome.devtools.inspectedWindow.tabId, { action: "start" }, (res) => {
+  BROWSER.tabs.sendMessage(BROWSER.devtools.inspectedWindow.tabId, { action: "start" }, (res) => {
     FEATURE_QUERY_DECLARATIONS = res.FEATURE_QUERY_DECLARATIONS;
     FEATURE_QUERY_CONDITIONS = res.FEATURE_QUERY_CONDITIONS;
     
@@ -89,7 +90,7 @@ start();
     onUpdated 
 ************************************************************************ */
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
+BROWSER.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
   if (changeInfo.status === "complete") {
     start();
   }
