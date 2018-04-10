@@ -140,7 +140,7 @@ aside li {
 
 aside li .toggle,
 aside li .details {
-  padding: 10px;
+  padding: 5px 10px;
   background: transparent;
 }
 
@@ -162,11 +162,13 @@ aside li .details {
   padding-right: 20px;
 }
 
-aside li.selected {
+aside li.selected,
+aside li:hover {
   background-color: #5590F7;
 }
 
-aside li.selected button {
+aside li.selected button,
+aside li:hover button {
   color: #FFF;
 }
 

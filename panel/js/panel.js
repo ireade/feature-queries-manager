@@ -69,6 +69,7 @@ function start() {
     
     if (FEATURE_QUERY_CONDITIONS.length == 0) {
       conditionsListEl.innerHTML = '<span class="notice">No Feature Queries found on this page.</span>';
+      mainEl.innerHTML = '';
     } else {
       displayFeatureQueryConditionsList();
       conditionsListEl.addEventListener('click', onClickConditionsList);
