@@ -8,7 +8,7 @@ Manage and toggle CSS on a page behind a @supports Feature Query
 
 **1. Install the Feature Queries Manager**
 
-- Download on Google Chrome
+- [Download on Google Chrome](https://chrome.google.com/webstore/detail/fbhgnconlfgmienbmpbeeenffagggonp/publish-accepted?authUser=0&hl=en-GB)
 
 (Other browsers TBA)
 
