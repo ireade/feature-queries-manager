@@ -12,6 +12,10 @@
     "<all_urls>"
   ],
 
+  "background": {
+    "scripts": ["browser-polyfill.js", "background.js"]
+  },
+
   "devtools_page": "devtools/index.html",
 
   "content_scripts": [{

@@ -3,6 +3,9 @@ let FEATURE_QUERY_CONDITIONS = [];
 const conditionsListEl = document.getElementById('feature-queries');
 const mainEl = document.querySelector('main');
 
+const portToBackgroundScript = browser.runtime.connect();
+let thisEvent = null; // see onClickConditionsList()
+
 function displayFeatureQueryConditionsList() {
   let content = '';
 
@@ -40,21 +43,25 @@ function displayConditionRules(conditionRules, event) {
 }
 
 function onClickConditionsList(event) {
+  thisEvent = event;
+
   // If clicked the checkbox
   if (event.target.tagName == 'INPUT') {
-    browser.tabs.sendMessage(browser.devtools.inspectedWindow.tabId, {
+    portToBackgroundScript.postMessage({ 
+      tabId: browser.devtools.inspectedWindow.tabId, 
       action: 'toggleCondition',
       condition: FEATURE_QUERY_CONDITIONS[event.target.parentElement.parentElement.dataset.index],
       toggleOn: event.target.checked
-    }).then((response) => {});
+    });
   }
 
   // If clicked the button
   else if (event.target.tagName == 'BUTTON') {
-    browser.tabs.sendMessage(browser.devtools.inspectedWindow.tabId, {
+    portToBackgroundScript.postMessage({ 
+      tabId: browser.devtools.inspectedWindow.tabId, 
       action: 'getConditionRules',
       condition: FEATURE_QUERY_CONDITIONS[event.target.parentElement.dataset.index]
-    }).then((response) => displayConditionRules(response, event));
+    });
   }
 }
 
@@ -63,29 +70,47 @@ function onClickConditionsList(event) {
 ************************************************************************ */
 
 function start() {
-  browser.tabs.sendMessage(browser.devtools.inspectedWindow.tabId, { action: 'start' }).then((res) => {
-    FEATURE_QUERY_DECLARATIONS = res.FEATURE_QUERY_DECLARATIONS;
-    FEATURE_QUERY_CONDITIONS = res.FEATURE_QUERY_CONDITIONS;
-    
-    if (FEATURE_QUERY_CONDITIONS.length == 0) {
-      conditionsListEl.innerHTML = '<span class="notice">No Feature Queries found on this page.</span>';
-      mainEl.innerHTML = '';
-    } else {
-      displayFeatureQueryConditionsList();
-      conditionsListEl.addEventListener('click', onClickConditionsList);
-      document.querySelector('li[data-index="0"] button').click();
-    }
+  portToBackgroundScript.postMessage({ 
+    tabId: browser.devtools.inspectedWindow.tabId, 
+    action: 'start' 
   });
 }
 
-start();
+function onReceiveStart(res) {
+  FEATURE_QUERY_DECLARATIONS = res.FEATURE_QUERY_DECLARATIONS;
+  FEATURE_QUERY_CONDITIONS = res.FEATURE_QUERY_CONDITIONS;
+  
+  if (FEATURE_QUERY_CONDITIONS.length == 0) {
+    conditionsListEl.innerHTML = '<span class="notice">No Feature Queries found on this page.</span>';
+    mainEl.innerHTML = '';
+  } else {
+    displayFeatureQueryConditionsList();
+    conditionsListEl.addEventListener('click', onClickConditionsList);
+    document.querySelector('li[data-index="0"] button').click();
+  }
+}
 
+start();
 document.getElementById('reload').addEventListener('click', start);
 
 /* ************************************************************************
-    onUpdated 
+    portToBackgroundScript.onMessage 
 ************************************************************************ */
 
-browser.tabs.onUpdated.addListener((tabId, changeInfo, tabInfo) => {
-  if (changeInfo.status === 'complete') start();
+portToBackgroundScript.onMessage.addListener((msg) => {
+  switch(msg.action) {
+    case 'restart':
+      start();
+      break;
+    case 'start':
+      onReceiveStart(msg); 
+      break;
+    case 'toggleCondition':
+      break;
+    case 'getConditionRules':
+      displayConditionRules(msg.conditionRules, thisEvent);
+      break;
+    default:
+      break;
+  }
 });

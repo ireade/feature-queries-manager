@@ -187,6 +187,7 @@ aside li:hover button {
 main {
   height: 100vh;
   overflow: scroll;
+  background-color: #fff;
 }
 
 .group {
