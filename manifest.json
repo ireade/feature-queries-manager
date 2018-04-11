@@ -4,7 +4,7 @@
   "name": "Feature Queries Manager",
   "short_name": "FQM",
   "description": "Manage and toggle CSS on a page behind a @supports Feature Query.",
-  "version": "0.1",
+  "version": "0.2",
 
   "permissions": [
     "tabs",
