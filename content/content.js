@@ -1,6 +1,6 @@
 
-let FEATURE_QUERY_DECLARATIONS = [];
-let FEATURE_QUERY_CONDITIONS = [];
+let FEATURE_QUERY_DECLARATIONS = []; // [{ index: number, stylesheet: Object, rule: Object }]
+let FEATURE_QUERY_CONDITIONS = []; // ["(display: flex)"]
 
 /* ************************************************************************
     start
@@ -84,18 +84,21 @@ browser.runtime.onMessage.addListener((msg) => {
       FEATURE_QUERY_CONDITIONS = [];
       readStylesheets();
       getConditionsFromStylesheets();
-      return Promise.resolve({ 
+      return Promise.resolve({
+        action: msg.action,
         FEATURE_QUERY_CONDITIONS: FEATURE_QUERY_CONDITIONS, 
         FEATURE_QUERY_DECLARATIONS: FEATURE_QUERY_DECLARATIONS 
       });
       break;
     case 'toggleCondition':
       toggleCondition(msg.condition, msg.toggleOn);
-      return Promise.resolve();
       break;
     case 'getConditionRules':
       const conditionRules = getConditionRules(msg.condition);
-      return Promise.resolve(conditionRules);
+      return Promise.resolve({ 
+        action: msg.action, 
+        conditionRules: conditionRules 
+      });
       break;
   }
 });
