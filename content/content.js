@@ -100,5 +100,7 @@ browser.runtime.onMessage.addListener((msg) => {
         conditionRules: conditionRules 
       });
       break;
+    default:
+      break;
   }
 });

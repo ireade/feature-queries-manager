@@ -97,7 +97,7 @@ document.getElementById('reload').addEventListener('click', start);
     portToBackgroundScript.onMessage 
 ************************************************************************ */
 
-portToBackgroundScript.onMessage.addListener(function(msg) {
+portToBackgroundScript.onMessage.addListener((msg) => {
   switch(msg.action) {
     case 'restart':
       start();
@@ -109,6 +109,8 @@ portToBackgroundScript.onMessage.addListener(function(msg) {
       break;
     case 'getConditionRules':
       displayConditionRules(msg.conditionRules, thisEvent);
+      break;
+    default:
       break;
   }
 });
