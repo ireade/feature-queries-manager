@@ -1,4 +1,4 @@
-<img src="images/icon.svg" width="50">
+<img src="images/icon.svg" width="50" alt="@ sign">
 
 # Feature Queries Manager
 

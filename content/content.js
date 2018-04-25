@@ -1,5 +1,5 @@
 
-let FEATURE_QUERY_DECLARATIONS = []; // [{ index: number, stylesheet: Object, rule: Object }]
+let FEATURE_QUERY_DECLARATIONS = []; // [{ index: Number, stylesheet: Object, rule: Object, invertedCSSText: String }]
 let FEATURE_QUERY_CONDITIONS = []; // ["(display: flex)"]
 
 /* ************************************************************************
@@ -14,14 +14,20 @@ function readStylesheets() {
     try {
       cssRules = Array.from(stylesheet.cssRules);
     } catch(err) {
-      return console.warn(`[FQM] Can't read cssRules from stylesheet: ${stylesheet.href}`);
+      return console.warn(`[FQM] Can't read cssRules from stylesheet: ${ stylesheet.href }`);
     }
 
     cssRules.forEach((rule, i) => {
-      if (rule instanceof CSSSupportsRule) FEATURE_QUERY_DECLARATIONS.push({ 
-        index: i, 
-        stylesheet: stylesheet,
-        rule: rule });
+      if (rule instanceof CSSSupportsRule) {
+        const cssRule = rule.cssText.substring(rule.cssText.indexOf("{") + 1);
+        const invertedCSSText = `@supports not ( ${ rule.conditionText } ) { ${ cssRule }`;
+        FEATURE_QUERY_DECLARATIONS.push({ 
+          index: i, 
+          stylesheet: stylesheet,
+          rule: rule,
+          invertedCSSText: invertedCSSText
+        });
+      }
     });
 
   });
@@ -44,11 +50,9 @@ function getConditionsFromStylesheets() {
 function toggleCondition(condition, toggleOn) {
   FEATURE_QUERY_DECLARATIONS.forEach((declaration) => {
     if (declaration.rule.conditionText === condition) {
-      if (toggleOn) {
-        declaration.stylesheet.insertRule(declaration.rule.cssText, declaration.index);
-      } else {
-        declaration.stylesheet.deleteRule(declaration.index);
-      }
+      declaration.stylesheet.deleteRule(declaration.index);
+      const rule = toggleOn ? declaration.rule.cssText : declaration.invertedCSSText;
+      declaration.stylesheet.insertRule(rule, declaration.index);
     }    
   });
 }

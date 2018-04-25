@@ -11,33 +11,72 @@
   <div class="wrapper">
 
     <header>
+      <img src="../images/icon.svg" width="50" alt="@ sign">
       <h1>Feature Queries Manager</h1>
+      <p>An extension to DevTools to turn off/on the CSS within @supports queries.</p>
     </header>
 
     <section>
-      <h2>1. Positive Condition</h2>
-      <style class="inline-style">
-        #example1 { background-color: palevioletred; }
-
-        @supports (display: flex) {
-          #example1 { background-color: lightgreen; }
-        }
-      </style>
-      <div>
-        <div id="example1">I'm #example1</div>
-      </div>
+      <h2>What is this?</h2>
+      <p>Stuff</p>
     </section>
 
     <section>
-      <h2>2. Negative Condition</h2>
-    </section>
+      <h2>Demo</h2>
+      <p>Note: You need to install the FQM for this to work.</p>
+      <br><br>
 
-    <section>
-      <h2>3. Conjunction (and)</h2>
-    </section>
+      <section>
+        <h3>1. Positive Condition</h3>
 
-    <section>
-      <h2>3. Disjunction (or)</h2>
+        <style class="inline-style">
+          #example1 { background-color: palevioletred; }
+
+          @supports (display: flex) {
+            #example1 { background-color: lightgreen; }
+          }
+        </style>
+        <div id="example1" class="example">I'm #example1</div>
+      </section>
+
+      <section>
+        <h3>2. Negative Condition</h3>
+
+        <style class="inline-style">
+          #example2 { background-color: palevioletred; }
+
+          @supports not (display: flex) {
+            #example2 { background-color: lightgreen; }
+          }
+        </style>
+        <div id="example2" class="example">I'm #example2</div>
+      </section>
+
+      <section>
+        <h3>3. Conjunction (and)</h3>
+
+        <style class="inline-style">
+          #example3 { background-color: palevioletred; }
+
+          @supports (display: flex) and (display: grid) {
+            #example3 { background-color: lightgreen; }
+          }
+        </style>
+        <div id="example3" class="example">I'm #example3</div>
+      </section>
+
+      <section>
+        <h3>3. Disjunction (or)</h3>
+
+        <style class="inline-style">
+          #example4 { background-color: palevioletred; }
+
+          @supports (display: flex) or (display: grid) {
+            #example4 { background-color: lightgreen; }
+          }
+        </style>
+        <div id="example4" class="example">I'm #example4</div>
+      </section>
     </section>
     
   </div>
