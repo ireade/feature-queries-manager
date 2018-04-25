@@ -8,5 +8,37 @@
   <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
-  <h1>Example!</h1>
+  <div class="wrapper">
+
+    <header>
+      <h1>Feature Queries Manager</h1>
+    </header>
+
+    <section>
+      <h2>1. Positive Condition</h2>
+      <style class="inline-style">
+        #example1 { background-color: palevioletred; }
+
+        @supports (display: flex) {
+          #example1 { background-color: lightgreen; }
+        }
+      </style>
+      <div>
+        <div id="example1">I'm #example1</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. Negative Condition</h2>
+    </section>
+
+    <section>
+      <h2>3. Conjunction (and)</h2>
+    </section>
+
+    <section>
+      <h2>3. Disjunction (or)</h2>
+    </section>
+    
+  </div>
 </body>
