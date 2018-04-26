@@ -21,8 +21,8 @@ It works by **negating** the feature query condition to give you the oppposite r
 
 **1. Install the Feature Queries Manager**
 
-- <img src="https://github.com/alrra/browser-logos/raw/master/src/chrome/chrome_256x256.png" alt="Google Chrome Logo" style="height: 1em;"> [Download on Google Chrome](https://chrome.google.com/webstore/detail/fbhgnconlfgmienbmpbeeenffagggonp/)
-- <img src="https://github.com/alrra/browser-logos/raw/master/src/firefox/firefox_256x256.png" alt="[Firefox Logo" style="height: 1em;"> [Download on Firefox](https://addons.mozilla.org/en-US/firefox/addon/feature-queries-manager/)
+- <img src="https://github.com/alrra/browser-logos/raw/master/src/chrome/chrome_256x256.png" alt="Google Chrome Logo" height="15"> [Download on Google Chrome](https://chrome.google.com/webstore/detail/fbhgnconlfgmienbmpbeeenffagggonp/)
+- <img src="https://github.com/alrra/browser-logos/raw/master/src/firefox/firefox_256x256.png" alt="[Firefox Logo" height="15"> [Download on Firefox](https://addons.mozilla.org/en-US/firefox/addon/feature-queries-manager/)
 
 (Other browsers TBA)
 
