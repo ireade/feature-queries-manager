@@ -6,20 +6,9 @@ const mainEl = document.querySelector('main');
 const portToBackgroundScript = browser.runtime.connect();
 let thisEvent = null; // see onClickConditionsList()
 
-function displayFeatureQueryConditionsList() {
-  let content = '';
-
-  FEATURE_QUERY_CONDITIONS.forEach((condition, i) => {
-    content += `<li data-index="${i}">
-      <span class="toggle">
-        <input type="checkbox" checked aria-label="Toggle Feature Query ${condition}">
-      </span>
-      <button class="details">${condition}</button>
-    </li>`;
-  });
-
-  conditionsListEl.innerHTML = content;
-}
+/* ************************************************************************
+    displayConditionRules 
+************************************************************************ */
 
 function displayConditionRules(conditionRules, event) {
   let content = '';
@@ -39,28 +28,34 @@ function displayConditionRules(conditionRules, event) {
   // Add .selected class to list item in sidebar
   const currentlySelected = document.querySelector('.selected');
   if (currentlySelected) currentlySelected.classList.remove('selected');
-  event.target.parentElement.classList.add('selected');
+  event.target.closest('.details').parentElement.classList.add('selected');
 }
+
+/* ************************************************************************
+    events 
+************************************************************************ */
 
 function onClickConditionsList(event) {
   thisEvent = event;
 
   // If clicked the checkbox
   if (event.target.tagName == 'INPUT') {
+    const index = event.target.parentElement.parentElement.dataset.index;
     portToBackgroundScript.postMessage({ 
       tabId: browser.devtools.inspectedWindow.tabId, 
       action: 'toggleCondition',
-      condition: FEATURE_QUERY_CONDITIONS[event.target.parentElement.parentElement.dataset.index],
+      condition: FEATURE_QUERY_CONDITIONS[index],
       toggleOn: event.target.checked
     });
+    document.querySelector(`li[data-index="${ index }"]`).classList.toggle("inverted");
   }
 
   // If clicked the button
-  else if (event.target.tagName == 'BUTTON') {
+  else if (event.target.closest('.details')) {
     portToBackgroundScript.postMessage({ 
       tabId: browser.devtools.inspectedWindow.tabId, 
       action: 'getConditionRules',
-      condition: FEATURE_QUERY_CONDITIONS[event.target.parentElement.dataset.index]
+      condition: FEATURE_QUERY_CONDITIONS[event.target.closest('.details').parentElement.dataset.index]
     });
   }
 }
@@ -74,6 +69,21 @@ function start() {
     tabId: browser.devtools.inspectedWindow.tabId, 
     action: 'start' 
   });
+}
+
+function displayFeatureQueryConditionsList() {
+  let content = '';
+
+  FEATURE_QUERY_CONDITIONS.forEach((condition, i) => {
+    content += `<li data-index="${i}">
+      <span class="toggle">
+        <input type="checkbox" checked aria-label="Toggle Feature Query ${condition}">
+      </span>
+      <button class="details">${condition}</button>
+    </li>`;
+  });
+
+  conditionsListEl.innerHTML = content;
 }
 
 function onReceiveStart(res) {

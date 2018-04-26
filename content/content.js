@@ -96,6 +96,9 @@ browser.runtime.onMessage.addListener((msg) => {
       break;
     case 'toggleCondition':
       toggleCondition(msg.condition, msg.toggleOn);
+      return Promise.resolve({ 
+        action: msg.action
+      });
       break;
     case 'getConditionRules':
       const conditionRules = getConditionRules(msg.condition);

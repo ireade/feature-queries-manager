@@ -75,6 +75,13 @@ h2 {
 
 h3 {
   font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+p {
+  display: block;
+  margin-bottom: 10px;
+  padding: 0 20px;
 }
 
 /* Layout ****************************** */
@@ -100,13 +107,20 @@ section section {
 
 /* Examples ****************************** */
 
+.inline-style,
+.example {
+  border-radius: 3px;
+}
+
 .inline-style {
   display: block;
   white-space: pre;
   background-color: #fff;
   text-align: left;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
 .example {
-  padding: 10px;
+  padding: 5px;
 }

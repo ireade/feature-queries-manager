@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title></title>
+  <title>FQM Demo</title>
 
   <link rel="stylesheet" href="./css/main.css">
 </head>
@@ -17,66 +17,75 @@
     </header>
 
     <section>
-      <h2>What is this?</h2>
-      <p>Stuff</p>
+      <h2>How does it work?</h2>
+      <p>It works by <strong>negating</strong> the feature query condition to give you the oppposite result. For example, it will turn the following feature query condition...</p>
+      <pre class="inline-style">@supports (display: flex) { /* styles here */ }</pre>
+      <p>Into the following...</p>
+      <pre class="inline-style">@supports not ((display: flex)) { /* styles here */ }</pre>
     </section>
 
     <section>
       <h2>Demo</h2>
-      <p>Note: You need to install the FQM for this to work.</p>
-      <br><br>
+      <p>Note: You need to <a href="https://github.com/ireade/feature-queries-manager">install the Feature Queries Manager in your browser</a> for this to work. Once installed, open up the "FQM" panel in devtools and toggle on/off the following styles:</p>
+      <br>
 
       <section>
         <h3>1. Positive Condition</h3>
 
-        <style class="inline-style">
-          #example1 { background-color: palevioletred; }
+        <style class="inline-style">#example1 { background-color: palevioletred; }
 
-          @supports (display: flex) {
-            #example1 { background-color: lightgreen; }
-          }
-        </style>
+@supports (display: flex) {
+  #example1 { background-color: lightgreen; }
+}</style>
         <div id="example1" class="example">I'm #example1</div>
       </section>
 
       <section>
         <h3>2. Negative Condition</h3>
 
-        <style class="inline-style">
-          #example2 { background-color: palevioletred; }
+        <style class="inline-style">#example2 { background-color: palevioletred; }
 
-          @supports not (display: flex) {
-            #example2 { background-color: lightgreen; }
-          }
-        </style>
+@supports not (display: flex) {
+  #example2 { background-color: lightgreen; }
+}</style>
         <div id="example2" class="example">I'm #example2</div>
       </section>
 
       <section>
         <h3>3. Conjunction (and)</h3>
 
-        <style class="inline-style">
-          #example3 { background-color: palevioletred; }
+        <style class="inline-style">#example3 { background-color: palevioletred; }
 
-          @supports (display: flex) and (display: grid) {
-            #example3 { background-color: lightgreen; }
-          }
-        </style>
+@supports (display: flex) and (display: grid) {
+  #example3 { background-color: lightgreen; }
+}</style>
         <div id="example3" class="example">I'm #example3</div>
       </section>
 
       <section>
-        <h3>3. Disjunction (or)</h3>
+        <h3>4. Disjunction (or)</h3>
 
-        <style class="inline-style">
-          #example4 { background-color: palevioletred; }
+        <style class="inline-style">#example4 { background-color: palevioletred; }
 
-          @supports (display: flex) or (display: grid) {
-            #example4 { background-color: lightgreen; }
-          }
-        </style>
+@supports (display: flex) or (display: grid) {
+  #example4 { background-color: lightgreen; }
+}</style>
         <div id="example4" class="example">I'm #example4</div>
       </section>
+    </section>
+
+    <p>More test examples....</p>
+    <br><br>
+
+    <section>
+      <h3>5. Positive Condition with failure</h3>
+
+      <style class="inline-style">#example5 { background-color: palevioletred; }
+
+@supports (display: XXX) {
+  #example5 { background-color: lightgreen; }
+}</style>
+      <div id="example5" class="example">I'm #example5</div>
     </section>
     
   </div>

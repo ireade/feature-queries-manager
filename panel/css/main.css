@@ -157,9 +157,26 @@ aside li .details {
   display: flex;
   text-align: left;
   justify-content: left;
+  flex-wrap: wrap;
   border: none;
   outline: none;
   padding-right: 20px;
+}
+
+aside li.inverted .details::before,
+aside li.inverted .details::after {
+  color: #c80000;
+  font-weight: 600;
+}
+
+aside li.inverted .details::before {
+  content: "not (";
+  margin-right: 3px;
+}
+
+aside li.inverted .details::after {
+  content: ")";
+  margin-left: 3px;
 }
 
 aside li.selected,
