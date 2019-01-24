@@ -6,7 +6,7 @@ Manage and toggle CSS on a page behind a @supports Feature Query
 
 ## How does it work?
 
-It works by **negating** the feature query condition to give you the oppposite result. For example, it will turn the following feature query condition...
+It works by **negating** the feature query condition to give you the opposite result. For example, it will turn the following feature query condition...
 
 ```css
 @supports (display: flex) { /* styles here */ }
